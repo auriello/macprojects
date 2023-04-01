@@ -1,0 +1,112 @@
+html{
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Impact;
+    background: linear-gradient(deeppink, darkturquoise);
+}
+
+.logIN {
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    width: 800px;
+    padding: 40px;
+    transform: translate(-50%, -50%);
+    background: mediumpurple;
+    opacity: 0.4;
+    box-sizing: border-box;
+    box-shadow: 3px 0 3px ghostwhite, -.4em 0 .8em ghostwhite;
+    border-radius: 45px ;
+}
+
+.logIN h2  {
+    position: sticky;
+}
+
+.logIN .userBox input{
+    width: 100%;
+    font-size: 22px;
+    text-align: center;
+    padding: 5px;
+    color: black;
+    opacity: 0.4;
+    margin-bottom: 10px;
+    border:none;
+    border-bottom: 1px solid orangered;
+    outline: thick double cyan;
+    background: deeppink;
+
+
+}
+
+::placeholder {
+    color: aquamarine;
+    opacity: 0.8;
+}
+
+.logIN form a {
+    position: relative;
+    display: inline-block;
+    padding: 10px 325px;
+    color: #04ebf5;
+    font-size: 22px;
+    text-decoration: #04ebf5 wavy underline;
+    text-transform: uppercase;
+    overflow: hidden;
+    transition: 0.5s;
+}
+
+.logIN a:hover {
+    background: fuchsia;
+    color: palegreen;
+    border-radius: 20px;
+    box-shadow: 0 0 5px fuchsia, 0 0 25px fuchsia, 0 0 50px fuchsia,
+    0 0 100px fuchsia;
+}
+
+.logIN a span {
+    position: absolute;
+    display: block;
+}
+/*vvvvvvvvvvvvvvvTHIS SECTION OF CODE CREATES THE TOP LINE OF THE SUBMIT ANIMATION BUTTON  vvvvvvvvvvvvvv*/
+.logIN a span:nth-child(1) {
+    top:0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #03e9f4);
+    animation: btn-anim1 1s linear infinite;
+}
+
+@keyframes btn-anim1 {
+    0% {
+        left: -100%;
+    }
+    50%,
+    100% {
+        left: 100%;
+    }}
+/*^^^^^^^^^^^^^^THIS SECTION OF CODE CREATES THE TOP LINE OF THE SUBMIT ANIMATION BUTTON^^^^^^^^^^^^^^^^*/
+
+.logIN a span:nth-child(2) {
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, #03e9f4);
+    animation: btn-anim2 1s linear infinite;
+    animation-delay: 0.25s;
+}
+@keyframes btn-anim2 {
+    0% {
+        top: -100%;
+    }
+    50%,
+    100% {
+        top: 100%;
+    }}
