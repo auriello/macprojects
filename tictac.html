@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/css/bootstrap.min.css">
+    <style>
+
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            width: 300px;
+            height: 300px;
+            border: 3px solid #000000;
+            margin: 0 auto; /* Center the board horizontally */
+        }
+
+        .cell {
+            border: 3px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            cursor: pointer;
+        }
+
+        .cell:hover {
+            background-color: lemonchiffon;
+        }
+
+        .cell[data-player="X"] {
+            color: lightcoral;
+        }
+
+        .cell[data-player="O"] {
+            color: cornflowerblue;
+        }
+
+        .message {
+            text-align: center;
+            color: fuchsia;
+            font-size: 48px;
+            margin-top: 20px;
+            animation: glowing 1.5s ease-in-out infinite;
+        }
+
+        @keyframes glowing {
+            0% {
+                opacity: 1;
+                text-shadow: 0 0 5px yellow;
+            }
+            50% {
+                opacity: 0.5;
+                text-shadow: 0 0 20px cyan;
+            }
+            100% {
+                opacity: 1;
+                text-shadow: 0 0 5px yellow;
+            }
+        }
+
+        .scoreboard {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .scoreboard-item {
+            margin: 0 10px;
+        }
+
+        /* Center the buttons horizontally */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="board">
+        <div class="cell" data-cell="0"></div>
+        <div class="cell" data-cell="1"></div>
+        <div class="cell" data-cell="2"></div>
+        <div class="cell" data-cell="3"></div>
+        <div class="cell" data-cell="4"></div>
+        <div class="cell" data-cell="5"></div>
+        <div class="cell" data-cell="6"></div>
+        <div class="cell" data-cell="7"></div>
+        <div class="cell" data-cell="8"></div>
+    </div>
+
+    <div class="message alert alert-primary" role="alert"></div>
+
+    <div class="scoreboard">
+        <div class="scoreboard-item">Player X: <span id="playerXScore">0</span></div>
+        <div class="scoreboard-item">Player O: <span id="playerOScore">0</span></div>
+    </div>
+
+    <!-- Button container -->
+    <div class="button-container">
+        <button class="btn btn-primary me-2"  id="new-game-btn">New Game</button>
+        <button class="btn btn-danger" id="clear-score-btn">Clear Score</button>
+    </div>
+</div>
+
+<!---------------------------------------           JAVASCRIPT    ---------------------------------------------------->
+<script>
+    // JavaScript code for game logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const board = document.querySelector('.board');
+        const cells = Array.from(document.querySelectorAll('.cell'));
+        const message = document.querySelector('.message');
+        const playerXScore = document.querySelector('#playerXScore');
+        const playerOScore = document.querySelector('#playerOScore');
+        const newGameBtn = document.querySelector('#new-game-btn');
+        const clearScoreBtn = document.querySelector('#clear-score-btn');
+        <!--the current player is kept track of & X is the first player to move-->
+        let currentPlayer = 'X';
+        <!--keeping track of the game-->
+        let gameFinished = false;
+        <!--keep score-->
+        let playerXWins = 0;
+        let playerOWins = 0;
+
+
+
+
+        <!--array for storing the winning combinations of the cells in the tic tac toe grid-->
+        const winningCombinations = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+        cells.forEach(cell => {
+            cell.addEventListener('click', handleClick);
+        });
+
+        newGameBtn.addEventListener('click', startNewGame);
+        clearScoreBtn.addEventListener('click', clearScore);
+        // handleclick is used to process the moves. when a cell is clicked it is called. if the game is a draw, win, or lose a message will appear to show the results//
+        function handleClick(e) {
+            const cell = e.target;
+            const cellIndex = cells.indexOf(cell);
+            if (cell.textContent === '' && !gameFinished) {
+                cell.textContent = currentPlayer;
+                cell.setAttribute('data-player', currentPlayer);
+                if (checkWin(currentPlayer)) {
+                    message.textContent = `Player ${currentPlayer} wins!`;
+                    gameFinished = true;
+                    updateScore(currentPlayer);
+                } else if (checkDraw()) {
+                    message.textContent = 'It\'s a draw!';
+                    gameFinished = true;
+                } else {
+                    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                }
+            }
+        }
+        // checkwin is going to check if a player has won or not by iterating over the winningcombinations array and checking for the players symbol in the cells.//
+        function checkWin(player) {
+            return winningCombinations.some(combination => {
+                return combination.every(index => {
+                    return cells[index].getAttribute('data-player') === player;
+                });
+            });
+        }
+        // checkDraw is going to check if the game is a draw when all the cells are filled, that means that checkwin is false//
+        function checkDraw() {
+            return cells.every(cell => {
+                return cell.textContent !== '';
+            });
+        }
+
+        // updatescore is going to update the score for each player. incrementing by 1//
+        function updateScore(player) {
+            if (player === 'X') {
+                playerXWins++;
+                playerXScore.textContent = playerXWins;
+            } else if (player === 'O') {
+                playerOWins++;
+                playerOScore.textContent = playerOWins;
+            }
+        }
+
+        // startnewgame will clear the board. the function is called when the new game button is pressed//
+        function startNewGame() {
+            cells.forEach(cell => {
+                cell.textContent = '';
+                cell.removeAttribute('data-player');
+            });
+            message.textContent = '';
+            gameFinished = false;
+            currentPlayer = 'X';
+        }
+
+        // this will clear the score on the board. it is called when the clear score button is pressed//
+        function clearScore() {
+            playerXWins = 0;
+            playerOWins = 0;
+            playerXScore.textContent = '0';
+            playerOScore.textContent = '0';
+        }
+    });
+</script>
+<!--<script src="your-javascript-file.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
+
+
+
+
+
